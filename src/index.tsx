@@ -1,4 +1,5 @@
 import { Hono } from 'hono'
+import { serveStatic } from 'hono/bun'
 import { v4 } from "uuid"
 import { z } from "zod"
 import { PageLayout } from './pages/page-layout';
@@ -21,13 +22,6 @@ export type Contact = z.infer<typeof contactSchema>
 
 const app = new Hono()
 
-app.use(async (c, next) => {
-  c.setRenderer((content) => {
-    return c.html(<PageLayout>{content}</PageLayout>)
-  })
-  await next()
-})
-
 const contacts: Contact[] = [
   {
     id: v4(),
@@ -37,6 +31,15 @@ const contacts: Contact[] = [
     email: "javi46018@gmail.com",
   },
 ]
+
+app.use(async (c, next) => {
+  c.setRenderer((content) => {
+    return c.html(<PageLayout>{content}</PageLayout>)
+  })
+  await next()
+})
+
+app.use("/styles/*", serveStatic({ root: "./public" }))
 
 app.get("/", (c) => {
   return c.redirect("/contacts")
