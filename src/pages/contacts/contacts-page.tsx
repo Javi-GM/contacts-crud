@@ -1,45 +1,56 @@
 import { Contact } from "../.."
+import { Button, Input } from "../../components"
+import { buttonVariants } from "../../components/button"
 import { ContactArticle } from "./components/contact-article"
+import { cn } from "../../lib/utils";
 
 interface ContactsPageProps {
   contacts: Contact[]
   currentSearch?: string
 }
 
+function TH({ children }: { children?: string | any }) {
+  return <th class="border border-slate-300 font-medium">{children}</th>
+}
+
 export function ContactsPage({ contacts = [], currentSearch }: ContactsPageProps) {
   return (
     <>
-      <h1>Contacts</h1>
       <form>
-        <label for="search-content">Find a Contact</label>
-        <input
-          id="search-contact"
-          name="q"
-          type="search"
-          placeholder="Search by..."
-          value={currentSearch}
-        />
-        <button type="submit">Search</button>
+        <div class="flex gap-4 items-end">
+          <Input
+            id="search-contact"
+            name="q"
+            type="search"
+            placeholder="Search by..."
+            value={currentSearch}
+            label="Find a Contact"
+          />
+          <Button type="submit">Search</Button>
+        </div>
       </form>
+      <div class="h-4 " />
       <section>
-        {contacts.length ? (
-          <table id="contacts">
-            <thead>
-              <tr>
-                <th>First</th> <th>Last</th> <th>Phone</th> <th>Email</th>
-              </tr>
-            </thead>
-            <tbody>
-              {contacts.map((contact) => (<ContactArticle {...contact} />))}
-            </tbody>
-          </table>
-        ) : (<div>0 elements found. Try to search with another value.</div>)
-        }
-      </section>
-      <br />
-      <p>
-        <a href="contacts/new">Add Contact</a>
-      </p>
+        <div class="bg-white w-full p-8 rounded-md flex flex-col gap-3 items-end">
+          <div class="flex justify-between w-full items-center">
+            <h2 class="text-lg font-semibold">Contacts</h2>
+            <a href="contacts/new" class={cn(buttonVariants({ variant: "secondary" }))}>Add Contact</a>
+          </div>
+          {contacts.length ? (
+            <table id="contacts" class="border border-collapse border-slate-400 w-full">
+              <thead >
+                <tr class="bg-slate-50">
+                  <TH>First</TH> <TH>Last</TH> <TH>Phone</TH> <TH>Email</TH> <TH></TH>
+                </tr>
+              </thead>
+              <tbody class="border-y">
+                {contacts.map((contact) => (<ContactArticle {...contact} />))}
+              </tbody>
+            </table >
+          ) : (<div>0 elements found. Try to search with another value.</div>)
+          }
+        </div>
+      </section >
     </>
   )
 }

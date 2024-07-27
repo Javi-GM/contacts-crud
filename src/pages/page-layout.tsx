@@ -1,4 +1,5 @@
 import { JSXNode } from "hono/jsx"
+import { GithubIcon } from "../components/github-icon"
 
 interface PageLayoutProps {
   children: JSXNode | JSXNode[] | Promise<string> | string
@@ -17,16 +18,20 @@ export function PageLayout({ children }: PageLayoutProps) {
         crossorigin="anonymous"
         defer
       />
-      <script src="https://cdn.tailwindcss.com" defer />
+      <script src="https://cdn.tailwindcss.com" />
       <link href="/styles/index.css" rel="stylesheet" />
     </head>
-    <body class="min-h-screen grid">
-      <header class="bg-gray-100">Contacts.app</header>
-      <main class="p-4">
-        {children}
-      </main>
-      <footer class="bg-gray-100">This is the footer</footer>
+    <body class="min-h-screen bg-slate-50">
+      <div class="w-5/12 m-auto pt-8">
+        <header class="flex items-center justify-between border-b-2 border-b-slate-600 py-6">
+          <h1 class="text-xl font-semibold">Contacts.app</h1>
+        </header>
+        <div class="h-14" />
+        <main>
+          {children}
+        </main>
+      </div>
     </body>
-  </html>
+  </html >
   )
 }
