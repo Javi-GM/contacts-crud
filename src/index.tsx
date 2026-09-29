@@ -7,6 +7,7 @@ import { ContactsPage } from './pages/contacts/contacts-page';
 import { NewContactPage } from './pages/contacts/new-contact/new-contact-page';
 import { ViewContact } from './pages/contacts/view-contact/view-contact';
 import { EditContactPage } from './pages/contacts/edit-contact/edit-contact';
+import { ContactsList } from './components/contacts-list';
 
 const phoneRegex = new RegExp(
   /^([+]?[\s0-9]+)?(\d{3}|[(]?[0-9]+[)])?([-]?[\s]?[0-9])+$/
@@ -42,6 +43,7 @@ app.use(async (c, next) => {
 })
 
 app.use("/styles/*", serveStatic({ root: "./public" }))
+app.use("/js/*", serveStatic({ root: "./public" }))
 
 app.get("/", (c) => {
   return c.redirect("/contacts")
@@ -65,6 +67,18 @@ app.get("/contacts", (c) => {
   console.log("filtered contacts: ", filteredContacts)
 
   return c.render(<ContactsPage contacts={filteredContacts} currentSearch={searchBy} />)
+})
+
+app.get("/contacts/list", (c) => {
+  const searchBy = c.req.query("q")
+
+  let filteredContacts: Contact[] = [...contacts];
+
+  if (searchBy) {
+    filteredContacts = contacts.filter(c => findBySearchString(c, searchBy))
+  }
+
+  return c.html(<ContactsList contacts={filteredContacts} />)
 })
 
 app.get("/contacts/new", (c) => {
@@ -205,7 +219,7 @@ app.post("/contacts/:contactId/edit", async (c) => {
   return c.redirect(`/contacts/${contact.id.trim()}`)
 })
 
-app.post("/contacts/:contactId/delete", (c) => {
+app.delete("/contacts/:contactId", (c) => {
   const contactId = c.req.param("contactId")
   const index = contacts.findIndex(c => c.id === contactId)
 
@@ -215,7 +229,7 @@ app.post("/contacts/:contactId/delete", (c) => {
 
   contacts.splice(index, 1)
 
-  return c.redirect("/contacts")
+  return c.redirect("/contacts", 303)
 })
 
 export default app

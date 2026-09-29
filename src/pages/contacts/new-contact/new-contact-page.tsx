@@ -1,5 +1,7 @@
 import { Button, Input } from "../../../components"
 import { BackIcon } from "../../../components/back-icon"
+import { buttonVariants } from "../../../components/button"
+import { cn } from "../../../lib/utils"
 
 export interface InputError {
   field: string
@@ -57,7 +59,7 @@ export function NewContactPage(props: NewContactPageProps) {
         />
         <div class="h-4" />
         <Button type="submit">Save Contact</Button>
-        <Button type="submit" icon={<BackIcon />} variant="secondary">Back</Button>
+        <a href={`/contacts`} class={cn([buttonVariants({ variant: "secondary" }), "flex gap-2"])}><BackIcon />Back</a>
       </form >
       {
         props.errors?.length &&

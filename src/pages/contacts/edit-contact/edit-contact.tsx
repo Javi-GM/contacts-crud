@@ -18,6 +18,7 @@ interface EditContactPageProps {
 export function EditContactPage({ contact, errors }: EditContactPageProps) {
   const { firstName, lastName, phone, email, id } = contact
 
+  console.log("Edit contact page with contact id : ", id)
   return <div>
     <form action={`/contacts/${id}/edit`} method="POST" class="flex flex-col gap-4">
       <Input label="First name" type="text" id="first-name" name="first-name" required value={firstName}
@@ -35,10 +36,23 @@ export function EditContactPage({ contact, errors }: EditContactPageProps) {
       <div class="h-2" />
       <Button type="submit">Save</Button>
     </form>
-    <form action={`/contacts/${id}/delete`} method="POST" class="w-full">
-      <Button type="submit" variant="destructive">Delete</Button>
-    </form>
-    <div class="h-2" />
-    <a href={`/contacts`} class={cn([buttonVariants({ variant: "secondary" }), "flex gap-2"])}><BackIcon />Back</a>
+    <Button
+      hx-delete={`/contacts/${id}`}
+      variant="destructive"
+      hx-target="body"
+      hx-push-url="true"
+      hx-confirm="Are you sure you want to delete this contact?"
+    >
+      Delete contact
+    </Button>
+    <div class="h-4" />
+    <a
+      hx-boost="false"
+      href={`/contacts`}
+      class={cn([buttonVariants({ variant: "secondary" }), "flex gap-2"])}
+    >
+      <BackIcon />
+      Back
+    </a>
   </div>
 }
